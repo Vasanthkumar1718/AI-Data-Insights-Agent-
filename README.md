@@ -29,6 +29,10 @@ This project automates spreadsheet analysis using an AI agent built with n8n. Th
 5. The agent prepares business insights and recommendations.
 6. Gmail sends the report to the configured recipient.
 
+### Workflow Screenshot
+
+![AI Data Insights Agent Workflow](screenshots/workflow.png)
+
 ## Key Features
 
 - Conversational interaction
@@ -36,6 +40,20 @@ This project automates spreadsheet analysis using an AI agent built with n8n. Th
 - Business insight generation
 - HTML email reporting
 - Tool-based AI agent workflow
+
+## Project Screenshots
+
+### 1. Chat Interaction
+
+![Chat Interaction](screenshots/Chat.png)
+
+### 2. Email Report
+
+![Email Report](screenshots/Email.png)
+
+### 3. Email Output
+
+![Email Output](screenshots/Email2.png)
 
 ## Example Use Case
 
