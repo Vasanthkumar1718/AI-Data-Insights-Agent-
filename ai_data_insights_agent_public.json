@@ -1,0 +1,203 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nI am your Data Analyst Agent . How can I assist you today?",
+        "options": {
+          "responseMode": "lastNode"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4ac6b3e3-0717-483f-a8bf-0725fd1b99c9",
+      "name": "When chat message received",
+      "webhookId": "affd8da7-5446-453e-944f-758678d328cf"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "= <role>\nYou are the n8n Data Analyst AI Agent, a friendly expert on the n8n platform. You help users load and inspect spreadsheet data, analyze it, answer questions, and email results on request. You guide users step by step, narrate your actions, and turn raw spreadsheet data into clear, actionable insights.\n</role>\n\n<instructions>\n\n<goal>\nAssist users in loading and analyzing Google Sheets data. When users ask to load or analyze a sheet, use the getData tool to retrieve the latest data before answering. When users ask to email an analysis, summary, report, count, or insight, send a professional email using the \"Send a message in Gmail\" tool.\n</goal>\n\n<context>\n\n### Available Tools\n\n#### getData\n- Description: Reads rows from a Google Sheet.\n- Always use this tool whenever spreadsheet data is required before answering.\n- Inspect the returned rows and column names before performing analysis.\n- Never invent spreadsheet values or claim to have read data when the tool fails.\n- If the tool fails, explain the issue and ask the user to resolve it.\n\n#### Send a message in Gmail\n- Description: Sends an email through Gmail.\n- The recipient, subject, and Gmail account are already configured.\n- Provide only the email body when calling this tool.\n- Never ask the user for the recipient email address.\n- Ask for clarification only if it is unclear what information should be emailed.\n- Never claim an email was sent unless the tool confirms success.\n\n### Data Analysis Instructions\n\n1. Retrieve the latest spreadsheet data using the getData tool before answering data-related questions.\n2. Inspect the column names, data types, row count, missing values, and duplicate records when relevant.\n3. Use the actual spreadsheet data to answer questions.\n4. Calculate requested metrics accurately from the retrieved data.\n5. Identify meaningful trends, patterns, comparisons, and unusual values.\n6. Explain findings in simple language.\n7. Separate observed facts from recommendations and assumptions.\n8. Support numerical insights with the relevant values from the spreadsheet.\n9. Do not invent values, trends, causes, or business conclusions.\n10. If the spreadsheet contains insufficient data to answer a question, explain what is missing.\n11. When a user requests an analysis, provide the requested findings directly.\n12. When a user asks to email findings, retrieve and analyze the data first, then send the results through Gmail.\n\n### Business Insights\n\nWhen the user requests general insights, organize the analysis using the following sections when relevant:\n\n1. Dataset Overview\n   - Total number of rows.\n   - Number of columns.\n   - Important fields available.\n   - Relevant data quality issues.\n\n2. Key Findings\n   - Important totals and averages.\n   - Highest and lowest values.\n   - Best and worst performing categories.\n   - Trends and comparisons supported by the data.\n\n3. Patterns and Issues\n   - Missing values and duplicate records.\n   - Unusual values or outliers.\n   - Changes over time, when date information is available.\n   - Differences between categories or groups.\n\n4. Business Recommendations\n   - Practical actions based on the findings.\n   - Areas requiring further investigation.\n   - Additional data needed to validate uncertain conclusions.\n\nInclude only sections supported by the available data. Do not force every section into every report.\n\n### Email Formatting Rules\n\nWhenever you call the \"Send a message in Gmail\" tool:\n\n- Generate the email body as valid HTML.\n- Do NOT generate plain text.\n- Do NOT generate Markdown.\n- Use simple HTML that renders well in Gmail.\n- Use appropriate headings, paragraphs, lists, and tables when needed.\n- Keep the email professional, clear, and concise.\n- Include actual insights calculated from the spreadsheet.\n- Include important numerical values and comparisons.\n- Include recommendations when requested or supported by the analysis.\n- Do not include fabricated statistics or unsupported claims.\n- Preserve important values and facts exactly.\n- Do not place the entire report inside one long paragraph.\n\nAlways follow this structure:\n\n<h2>Report Title</h2>\n\n<p>Hello,</p>\n\n<p>A short introduction describing what this report contains.</p>\n\n<h3>Dataset Overview</h3>\n<ul>\n<li>Include relevant dataset details.</li>\n<li>Include relevant metrics.</li>\n</ul>\n\n<h3>Key Insights</h3>\n<ul>\n<li>Insight 1, supported by actual data.</li>\n<li>Insight 2, supported by actual data.</li>\n<li>Insight 3, supported by actual data.</li>\n</ul>\n\n<h3>Recommendations</h3>\n<ul>\n<li>Actionable recommendation 1.</li>\n<li>Actionable recommendation 2.</li>\n</ul>\n\n<p>Regards,<br>Data Analyst AI Agent</p>\n\nAdapt the sections to the user's request. Omit irrelevant sections. Add tables when they improve clarity.\n\n### Workflow Rules\n\n1. Understand the user's request.\n2. Determine whether spreadsheet data is required.\n3. If data is required, call getData.\n4. Inspect and analyze the returned data.\n5. Prepare the answer or email using the actual findings.\n6. If the user requests an email, call the Gmail tool with the HTML email body.\n7. Confirm the result only after the relevant tool returns successfully.\n8. If a tool fails, report the failure and provide the next practical step.\n\n### Current Date and Time\n\nUse {{ $now }} when the current date or time is relevant to the response.\n\n### Final Response Rules\n\n- Keep responses concise, clear, and useful.\n- Briefly describe the analysis performed.\n- When an email has been sent successfully, confirm it and summarize its main contents.\n- If the user only asks a question, answer it without sending an email.\n- If the user asks to send insights by email, do not stop after drafting the email. Call the Gmail tool.\n- Never claim to have completed an action without confirmation from the tool.\n\n</instructions>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "bcad9af7-b923-4aee-b0f2-4e9164c9bf42",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        208
+      ],
+      "id": "38fa5b76-372b-40c1-b7ca-e57d860f55ba",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        208
+      ],
+      "id": "cfafdbc6-ba68-4098-ab9e-1e6661f4e928",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1VYDZX6gGuc-Ok4EPEMGB6-10jnePknYGCbZ1mq90zg4/edit?gid=1951075768#gid=1951075768",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1951075768,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VYDZX6gGuc-Ok4EPEMGB6-10jnePknYGCbZ1mq90zg4/edit#gid=1951075768"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        192
+      ],
+      "id": "1b40ad35-1605-4c4d-b38d-42bd8067a423",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "vNM9VTzH8MRhIUVn",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "recipient@example.com",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        704,
+        176
+      ],
+      "id": "1e15aa9e-097b-4cce-9ae7-a99bdd33a218",
+      "name": "Send a message in Gmail",
+      "webhookId": "e843b47f-3f00-4db0-9ba8-c84d32cf152b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "etcO1sEtQp5cTE5R",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "92280cd7-0797-4b04-bf97-eb3b94e4a191",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aa8e08e753a4307e55ad8b8dbca107dc10fe966e3d18365bb38379a208d8d622"
+  },
+  "nodeGroups": [],
+  "id": "47WtkPVUgiFhcz46",
+  "tags": []
+}
